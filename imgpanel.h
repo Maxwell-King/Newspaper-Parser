@@ -1,52 +1,64 @@
 #include <cstring>
+#include <iostream>
+#include <fstream>  
 
 #include <wx/wx.h>
 #include <wx/sizer.h>
+#include <wx/clipbrd.h>
 #include <tesseract/baseapi.h>
 #include <leptonica/allheaders.h>
 #include "nlohmann/json.hpp"
 
-class wxImagePanel : public wxPanel {
-  //buttons here?
-public:
-  wxImagePanel(wxFrame *parent, wxString file, wxBitmapType format);
+#define SEPERATOR ","
 
-  int dcX, dcY, iButtons;
-  wxImage image;
-	Pix *pixImg;
-	tesseract::TessBaseAPI *tessApi = new tesseract::TessBaseAPI();
+
+
+std::string OCRregion(std::string , int x, int y, int w, int h) {
+	
+	
+}
+
+class wxImagePanel : public wxPanel {
+public:
+  wxImagePanel(wxFrame *parent, wxString file);
+	wxImage image;
   wxBitmap resized;
+	int w_bmp, h_bmp, w_img, h_img;
+	nlohmann::json *jsData;
+
+
+	bool b_dragging = false;
+	bool b_mouseleftdown = false;
 
   void paintEvent(wxPaintEvent &evt);
-  void render(wxDC& dc);
-  void addButtons();
-  wxSize ScaleToScreen(wxSize sz);  // longest side scaled to fit screen (1080P) maintaing aspect ratio
+	void mouseDownEvent(wxMouseEvent &evt);
+	void mouseDragEvent(wxMouseEvent &evt);
 
+	void mouseUpEvent(wxMouseEvent &evt);
+
+  void render(wxDC& dc);
+  wxSize ScaleToScreen(wxSize sz);  // longest side scaled to fit screen (1080P) maintaing aspect ratio
+	wxPoint wxhghPoint;
+	wxPoint wxlowPoint;
   DECLARE_EVENT_TABLE()
 };
 
 BEGIN_EVENT_TABLE(wxImagePanel, wxPanel)
-
 EVT_PAINT(wxImagePanel::paintEvent)
-
+EVT_LEFT_DOWN(wxImagePanel::mouseDownEvent)
+EVT_MOTION(wxImagePanel::mouseDownEvent)
+EVT_LEFT_UP(wxImagePanel::mouseUpEvent)
 END_EVENT_TABLE()
 
-wxImagePanel::wxImagePanel(wxFrame *parent, const wxString file, const wxBitmapType format) : wxPanel(parent) {
-  // wxstrFile = file;
-	// load json C:/Users/danie/Pictures/train_80_percent.json
-	// load json C:/Users/danie/Pictures/val_20_percent.json
-	if (tessApi->Init(NULL, "eng")) {
-      fprintf(stderr, "Could not initialize tesseract.\n");
-      exit(1);
-  }
-	pixImg = pixRead(file.c_str());
-	tessApi->SetImage(pixImg);
-  tessApi->SetPageSegMode(tesseract::PSM_AUTO);
-  tessApi->Recognize(0);
-	// add image
-	image.LoadFile(file, format); 
+wxImagePanel::wxImagePanel(wxFrame *parent, wxString file) : wxPanel(parent) {
+	image.LoadFile(file, wxBITMAP_TYPE_JPEG); 
+	w_img = image.GetSize().x;
+	h_img = image.GetSize().y;
+
   parent->SetSize(ScaleToScreen(image.GetSize()));
-  dcX = -1, dcY = -1;
+	w_bmp = parent->GetClientSize().x;
+	h_bmp = parent->GetClientSize().y;
+	resized = wxBitmap(image.Scale(w_bmp, h_bmp));
 }
 
 void wxImagePanel::paintEvent(wxPaintEvent &evt) {
@@ -54,52 +66,46 @@ void wxImagePanel::paintEvent(wxPaintEvent &evt) {
   render(dc);
 }
 
-void wxImagePanel::render(wxDC &dc) {
-  if (dcX == -1 && dcY == -1) {
-    dc.GetSize(&dcX, &dcY);
-    resized = wxBitmap(image.Scale(dcX, dcY));
-    addButtons();
-  }
-  dc.DrawBitmap(resized, 0, 0, false);
+void wxImagePanel::mouseDownEvent(wxMouseEvent &evt) {
+	wxhghPoint = evt.GetPosition(); // assuming topleft -> bottomright
+	b_mouseleftdown = true;
+} 
+
+void wxImagePanel::mouseDragEvent(wxMouseEvent &evt) {
+	if (b_mouseleftdown) {
+		b_dragging = true;
+	}
+} 
+
+void wxImagePanel::mouseUpEvent(wxMouseEvent &evt) {
+  if (dragging) {
+		wxlowPoint = evt.GetPosition();
+		if (wxlowPoint.x < wxhghPoint.x) {
+			int lowX = wxhghPoint.x;
+			wxhghPoint.x = wxlowPoint.x;
+			wxlowPoint.x = lowX;
+		}	
+		if (wxlowPoint.y < wxhghPoint.y) {
+			int lowY = wxhghPoint.y;
+			wxhghPoint.y = wxlowPoint.y;
+			wxlowPoint.y = lowY;
+		}	
+		int xbb_img = wxhghPoint.x/w_bmp * w_img;
+		int ybb_img = wxhghPoint.y/h_bmp * h_img;
+		int wbb_img = (wxlowPoint.x-wxhghPoint.x)/w_bmp * w_img;
+		int hbb_img = (wxlowPoint.y-wxhghPoint.y)/h_bmp * h_img;
+
+		// std::string text = OCRregion(file, xbb_img, ybb_img, wbb_img, hbb_img);
+		std::cerr << "highpoint: " << wxhghPoint.x << SEPERATOR << wxhghPoint.y << std::endl;
+		std::cerr << "lowpoint: " << wxlowPoint.x << SEPERATOR << wxlowPoint.y << std::endl;
+	}
+	b_mouseleftdown = false;
+	dragging = false;
 }
 
-void wxImagePanel::addButtons() {
-  tesseract::ResultIterator* riIter = tessApi->GetIterator();
-  tesseract::PageIteratorLevel pilLevel = tesseract::RIL_PARA;
-  if (riIter != 0) {
-    do {
-			std::string strBlock = riIter->GetUTF8Text(pilLevel);
-      int x1, y1, x2, y2;
-      riIter->BoundingBox(pilLevel, &x1, &y1, &x2, &y2);
-			int w = x2-x1;
-      int h = y2-y1;
-      wxPoint *cpPos = new wxPoint( (double) x1/image.GetSize().x * dcX, (double) y1/image.GetSize().y * dcY);
-      wxSize *cpSz = new wxSize( (double) w/image.GetSize().x * dcX, (double) h/image.GetSize().y * dcY);
 
-			wxButton *cpButton = new wxButton(this, wxID_ANY, wxEmptyString, *cpPos, *cpSz);
-			cpButton->SetBitmap(wxBitmapBundle(resized.GetSubBitmap(wxRect(*cpPos, *cpSz))));
-			cpButton->Bind(wxEVT_BUTTON,
-			  [=](wxCommandEvent&) {
-					wxDialog *cpDialog = new wxDialog(this, wxID_ANY, wxEmptyString);
-					wxBoxSizer *DlgButtonSizer = new wxBoxSizer(wxHORIZONTAL);
-					wxBoxSizer *DlgMainSizer = new wxBoxSizer(wxVERTICAL);
-
-					wxString DlgOpts[] = {"HEADLINE", "BYLINE"};
-					wxChoice *DlgChoice = new wxChoice(cpDialog, wxID_ANY, wxDefaultPosition, wxDefaultSize, 2, DlgOpts); // add annotation 
-					wxButton *DlgCopy = new wxButton(cpDialog, wxID_ANY, "Copy");
-					wxStaticText *DlgBlockTxt = new wxStaticText(cpDialog, wxID_ANY, wxString::FromUTF8(strBlock));
-					DlgButtonSizer->Add(DlgChoice, 0, wxALIGN_BOTTOM | wxBOTTOM | wxLEFT | wxRIGHT, 15);
-					DlgButtonSizer->Add(DlgCopy, 0, wxALIGN_BOTTOM | wxBOTTOM | wxRIGHT | wxLEFT, 15);
-					wxSizer *DlgLineSizer = cpDialog->CreateSeparatedSizer(DlgButtonSizer);
-					DlgLineSizer->Add(DlgBlockTxt, 0, wxALIGN_CENTER);
-
-					cpDialog->SetSizerAndFit(DlgLineSizer);
-					cpDialog->ShowModal();
-			  });
-    } while (riIter->Next(pilLevel));
-  }
-  tessApi->End();
-  delete tessApi;
+void wxImagePanel::render(wxDC &dc) {
+  dc.DrawBitmap(resized, 0, 0, false);
 }
 
 wxSize wxImagePanel::ScaleToScreen(wxSize sz) { // longest side scaled to fit screen (1080P) maintaing aspect ratio

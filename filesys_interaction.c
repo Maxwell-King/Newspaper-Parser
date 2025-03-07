@@ -116,13 +116,6 @@ static void get_date( char chFullPath[MAX_PATH], char chDate[20] ) {
 
 	snprintf (chDate, 20, "%04d-%02d-%02d %02d:%02d:%02d", stFileDate.wYear, stFileDate.wMonth, stFileDate.wDay, stFileDate.wHour, stFileDate.wMinute, stFileDate.wSecond ); //YYYY-MM-DD 
 
-
-	// date_cap[0] = stFileDate.wYear;
-	// date_cap[1] = stFileDate.wMonth;
-	// date_cap[2] = stFileDate.wDay;
-	// date_cap[3] = stFileDate.wHour;
-	// date_cap[4] = stFileDate.wMinute;
-	// date_cap[5] = stFileDate.wSecond;
 	// YYYY-MM-DD HH:MM:SS
 }
 
