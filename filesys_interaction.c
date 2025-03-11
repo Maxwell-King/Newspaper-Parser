@@ -7,17 +7,15 @@ static void get_date(char chFullPath[MAX_PATH + FILENAME_MAX], char chDate[20]);
 void set_dir(const char* dir_name);
 static void ErrorExit(void);
 
-
 char chDirName[MAX_PATH] = {};
 HANDLE hDir = INVALID_HANDLE_VALUE;
 HANDLE syncThread = INVALID_HANDLE_VALUE;
 DWORD dwCompletionStatus;
 
-void watch_dir(void) { //char *f_name, int date_cap[6]
-	char chFileName[FILENAME_MAX];
-	char chDate[20];
-	//int iDate[6];
-	WCHAR wchBuf[100] = {};
+void watch_dir(void) {
+char chFileName[FILENAME_MAX];
+char chDate[20];
+WCHAR wchBuf[100] = {};
 	if ((syncThread = CreateThread( NULL, 0,
 			(LPTHREAD_START_ROUTINE)wait,
 			&wchBuf, 0, NULL)) == NULL) {
