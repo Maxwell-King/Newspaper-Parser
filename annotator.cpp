@@ -1,7 +1,6 @@
 #include "annotator.hpp"
 
-bool wxAnnotatorApp::OnInit()
-{
+bool wxAnnotatorApp::OnInit() {
 	if (!wxApp::OnInit())
 		return false;
 	std::cerr << "Starting annotator..." << std::endl;
@@ -15,29 +14,23 @@ bool wxAnnotatorApp::OnInit()
 	return true;
 }
 
-
-int wxAnnotatorApp::OnExit()
-{
+int wxAnnotatorApp::OnExit() {
 	closeJSON();
 	return 0;
 }
 
-int wxAnnotatorApp::OnRun()
-{
+int wxAnnotatorApp::OnRun() {
 	int exitcode = wxApp::OnRun();
 	return exitcode;
 }
 
-void wxAnnotatorApp::OnInitCmdLine(wxCmdLineParser& parser)
-{
+void wxAnnotatorApp::OnInitCmdLine(wxCmdLineParser& parser) {
 	parser.SetDesc(g_cmdLineDesc);
 }
 
-bool wxAnnotatorApp::OnCmdLineParsed(wxCmdLineParser& parser)
-{
+bool wxAnnotatorApp::OnCmdLineParsed(wxCmdLineParser& parser) {
 	file = parser.GetParam(0);
 	date = parser.GetParam(1);
-
 	return true;
 }
 
