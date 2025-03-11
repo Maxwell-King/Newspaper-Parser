@@ -11,13 +11,11 @@
 #include <wx/wx.h>
 #endif
 
-class wxAnnotatorApp: public wxApp
-{
+class wxAnnotatorApp: public wxApp {
 	wxFrame *frame;
 	wxImagePanel *drawPanel;
 	wxString file;
 	wxString date;
-
 public:
 	virtual bool OnInit();
 	virtual int OnExit();
