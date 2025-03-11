@@ -1,6 +1,6 @@
 #include "annotator.hpp"
 
-// annotator C:\Users\danie\Pictures\test\img22.jpg
+//aaaaa
 bool wxAnnotatorApp::OnInit()
 {
   if (!wxApp::OnInit())
@@ -14,7 +14,6 @@ bool wxAnnotatorApp::OnInit()
 	chooseJSON();
 	drawPanel = new wxImagePanel(frame, file, date);
   
-	
   frame->Show();
 	
   return true;
