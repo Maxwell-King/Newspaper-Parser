@@ -14,7 +14,7 @@ wxDlgChoice::wxDlgChoice(wxPanel *parent, wxString text, int xbb_img, int ybb_im
         }
         if (DlgChoice->GetSelection() != wxNOT_FOUND ) {
           jsData["annotations"] += nlohmann::json::object({
-            {"id", 2*iImgID+3000 + iBboxes}, // id must be unique 
+            {"id", 50*iImgID + iBboxes}, // id must be unique 
             {"iscrowd", 0},
             {"category_id", DlgChoice->GetSelection()},
             {"image_id", iImgID},
