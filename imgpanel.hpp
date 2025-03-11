@@ -29,7 +29,7 @@ public:
 	void mouseDownEvent(wxMouseEvent &evt);
 	void mouseDragEvent(wxMouseEvent &evt);
 	void mouseUpEvent(wxMouseEvent &evt);
-	void render(wxGraphicsContext &gc);
+	void render(wxDC &dc);
 	wxSize ScaleToScreen(wxSize sz);	// longest side scaled to fit screen (1080P) maintaing aspect ratio
 };
 
