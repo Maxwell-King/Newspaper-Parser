@@ -1,28 +1,27 @@
 #include "annotator.hpp"
 
-//aaaaa
 bool wxAnnotatorApp::OnInit()
 {
   if (!wxApp::OnInit())
     return false;
   
   std::cerr << "Starting annotator..." << std::endl;
-	
-	wxInitAllImageHandlers();
+  
+  wxInitAllImageHandlers();
             
   frame = new wxFrame(NULL, wxID_ANY, wxT("Annotator"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX));
-	chooseJSON();
-	drawPanel = new wxImagePanel(frame, file, date);
+  chooseJSON();
+  drawPanel = new wxImagePanel(frame, file, date);
   
   frame->Show();
-	
+  
   return true;
 }
 
 
 int wxAnnotatorApp::OnExit()
 {
-	closeJSON();
+  closeJSON();
   return 0;
 }
 
@@ -39,8 +38,8 @@ void wxAnnotatorApp::OnInitCmdLine(wxCmdLineParser& parser)
 
 bool wxAnnotatorApp::OnCmdLineParsed(wxCmdLineParser& parser)
 {
-	file = parser.GetParam(0);
-	date = parser.GetParam(1);
+  file = parser.GetParam(0);
+  date = parser.GetParam(1);
 
   return true;
 }
