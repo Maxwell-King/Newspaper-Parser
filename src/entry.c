@@ -1,4 +1,4 @@
-#include "filesys_interaction.h"
+#include "../include/filesys_interaction.h"
 
 // 1) get file from directory
 // 2) call child process

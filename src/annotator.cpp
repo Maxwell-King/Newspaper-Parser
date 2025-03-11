@@ -1,4 +1,4 @@
-#include "annotator.hpp"
+#include "../include/annotator.hpp"
 
 bool wxAnnotatorApp::OnInit() {
 	if (!wxApp::OnInit())

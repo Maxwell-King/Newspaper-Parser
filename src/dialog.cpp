@@ -1,4 +1,4 @@
-#include "dialog.hpp"
+#include "../include/dialog.hpp"
 
 wxDlgChoice::wxDlgChoice(wxPanel *parent, wxString text, int xbb_img, int ybb_img, int wbb_img, int hbb_img) : wxDialog(parent, wxID_ANY, wxEmptyString) {
 	wxStaticText *DlgBlockTxt = new wxStaticText(this, wxID_ANY, text);

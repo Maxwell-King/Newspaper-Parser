@@ -1,4 +1,4 @@
-#include "imgpanel.hpp"
+#include "../include/imgpanel.hpp"
 
 std::string OCRregion(Pix *pixRegion, int x, int y, int w, int h) {
 	tesseract::TessBaseAPI *tessApi = new tesseract::TessBaseAPI();
