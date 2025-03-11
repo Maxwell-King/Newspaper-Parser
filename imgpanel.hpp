@@ -16,17 +16,20 @@ public:
 	wxImage image;
 	wxPoint wxhghPoint;
 	wxPoint wxlowPoint;
+	wxPoint wxcurPoint;
 	Pix *pixImg;
 	wxBitmap resized;
 	int w_bmp, h_bmp, w_img, h_img;
+
 	bool b_dragging = false;
 	bool b_mouseleftdown = false;
 
 	void paintEvent(wxPaintEvent &evt);
+
 	void mouseDownEvent(wxMouseEvent &evt);
 	void mouseDragEvent(wxMouseEvent &evt);
 	void mouseUpEvent(wxMouseEvent &evt);
-	void render(wxDC& dc);
+	void render(wxGraphicsContext &gc);
 	wxSize ScaleToScreen(wxSize sz);	// longest side scaled to fit screen (1080P) maintaing aspect ratio
 };
 

@@ -33,7 +33,7 @@ wxImagePanel::wxImagePanel(wxFrame *parent, wxString file, wxString date) : wxPa
 	resized = wxBitmap(image.Scale(w_bmp, h_bmp));
 }
 
-void wxImagePanel::paintEvent(wxPaintEvent &evt) {
+void wxImagePanel::paintEvent(wxPaintEvent &evt) { // called on Refresh();
 	wxPaintDC dc(this);
 	render(dc);
 }
@@ -45,7 +45,10 @@ void wxImagePanel::mouseDownEvent(wxMouseEvent &evt) {
 
 void wxImagePanel::mouseDragEvent(wxMouseEvent &evt) {
 	if (b_mouseleftdown) {
+		wxcurPoint = evt.GetPosition();
 		b_dragging = true;
+		wxClientDC dc(this);
+		render(dc);
 	}
 } 
 
@@ -77,8 +80,15 @@ void wxImagePanel::mouseUpEvent(wxMouseEvent &evt) {
 }
 
 void wxImagePanel::render(wxDC &dc) {
+	if (b_dragging) { 
+		dc.DrawLine(wxhghPoint.x, wxhghPoint.y, wxcurPoint.x, wxhghPoint.y);
+		dc.DrawLine(wxhghPoint.x, wxhghPoint.y, wxhghPoint.x, wxcurPoint.y);
+		dc.DrawLine(wxcurPoint.x, wxcurPoint.y, wxcurPoint.x, wxhghPoint.y);
+		dc.DrawLine(wxcurPoint.x, wxcurPoint.y, wxhghPoint.x, wxcurPoint.y);
+	}
 	dc.DrawBitmap(resized, 0, 0, false);
 }
+
 
 wxSize wxImagePanel::ScaleToScreen(wxSize sz) { // longest side scaled to fit screen (1080P) maintaing aspect ratio
 	wxSize szNewSz = sz;
