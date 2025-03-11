@@ -2,10 +2,9 @@
 
 #include <cstring>
 #include <iostream>
-#include <fstream>  
+#include <fstream>
 
 #include <wx/wx.h>
-
 
 extern nlohmann::json jsData;
 extern std::string jsFilename;
