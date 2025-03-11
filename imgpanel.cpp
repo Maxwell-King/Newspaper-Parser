@@ -11,9 +11,7 @@ std::string OCRregion(Pix *pixRegion, int x, int y, int w, int h) {
   return outText;
 }
 
-
 wxImagePanel::wxImagePanel(wxFrame *parent, wxString file, wxString date) : wxPanel(parent) {
-  
   Bind(wxEVT_PAINT, &wxImagePanel::paintEvent, this);
   Bind(wxEVT_LEFT_DOWN, &wxImagePanel::mouseDownEvent, this);
   Bind(wxEVT_MOTION, &wxImagePanel::mouseDragEvent, this);
@@ -78,7 +76,6 @@ void wxImagePanel::mouseUpEvent(wxMouseEvent &evt) {
   b_dragging = false;
 }
 
-
 void wxImagePanel::render(wxDC &dc) {
   dc.DrawBitmap(resized, 0, 0, false);
 }
@@ -87,7 +84,6 @@ wxSize wxImagePanel::ScaleToScreen(wxSize sz) { // longest side scaled to fit sc
   wxSize szNewSz = sz;
   double dNewW = sz.x/1920.f;
   double dNewH = sz.y/1080.f;
-  
   if (dNewW > 1.0f || dNewH > 1.0f) {
     double dMaxF = dNewW >= dNewH ? dNewW : dNewH;
     szNewSz.x = round((double) szNewSz.x/dMaxF);
