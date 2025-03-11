@@ -17,7 +17,7 @@ public:
   wxBoxSizer *DlgButtonSizer;
   wxBoxSizer *DlgMainSizer;
 
-  wxChoice *DlgChoice; // add annotation 
+  wxChoice *DlgChoice;
   wxButton *DlgCopy;
 };
 
