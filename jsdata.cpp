@@ -8,7 +8,7 @@ int iNumCats;
 
 void openJSON(nlohmann::json &js, const std::string strDataSet) {
 	std::filebuf fb;
-	if (fb.open (strDataSet, std::ios::in)) {
+	if (fb.open(strDataSet, std::ios::in)) {
 		std::istream is(&fb);
 		js = nlohmann::json::parse(is);
 	}
@@ -38,7 +38,6 @@ void chooseJSON() {
 					wxCatNames.push_back(nlohmann::to_string((*jsIt)["name"]));
 					iNumCats++;
 	}
-
 	if (dValPrct < 0.2) { //add to val set. keep 80/20 ratio
 		jsData = jsValData;
 		jsFilename = "val_20_percent.json";
