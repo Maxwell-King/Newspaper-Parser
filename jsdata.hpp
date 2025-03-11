@@ -1,3 +1,5 @@
+#ifndef JSDATA_H
+#define JSDATA_H
 #include "nlohmann/json.hpp"
 
 #include <cstring>
@@ -15,3 +17,5 @@ extern int iNumCats;
 void openJSON(const std::string strDataSet);
 void chooseJSON();
 void closeJSON();
+
+#endif
