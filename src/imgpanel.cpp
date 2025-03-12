@@ -48,8 +48,6 @@ void wxImagePanel::mouseDragEvent(wxMouseEvent &evt) {
 		wxcurPoint = evt.GetPosition();
 		b_dragging = true;
 		paintNow();
-		// wxClientDC dc(this);
-		// render(dc);
 	}
 } 
 
@@ -90,7 +88,6 @@ void wxImagePanel::render(wxDC &dc) {
 		dc.DrawLine(wxcurPoint.x, wxcurPoint.y, wxhghPoint.x, wxcurPoint.y);
 	}
 }
-
 
 wxSize wxImagePanel::ScaleToScreen(wxSize sz) { // longest side scaled to fit screen (1080P) maintaing aspect ratio
 	wxSize szNewSz = sz;
