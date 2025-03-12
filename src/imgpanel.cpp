@@ -18,7 +18,7 @@ wxImagePanel::wxImagePanel(wxFrame *parent) : wxPanel(parent) {
 	Bind(wxEVT_LEFT_DOWN, &wxImagePanel::mouseDownEvent, this);
 	Bind(wxEVT_MOTION, &wxImagePanel::mouseDragEvent, this);
 	Bind(wxEVT_LEFT_UP, &wxImagePanel::mouseUpEvent, this);
-	image.LoadFile(file, wxBITMAP_TYPE_JPEG); 
+	image.LoadFile(file, wxBITMAP_TYPE_ANY); 
 	pixImg = pixRead(file.c_str());
 	w_img = image.GetSize().x;
 	h_img = image.GetSize().y;
