@@ -31,7 +31,6 @@ wxDlgChoice::wxDlgChoice(wxPanel *parent, wxString text, int xbb_img, int ybb_im
 						{"bbox", nlohmann::json::array({xbb_img, ybb_img, wbb_img, hbb_img})}
 					});
 					iBboxes++;
-
 				}
 			});
 	DlgButtonSizer->Add(DlgChoice, 0, wxALIGN_BOTTOM | wxBOTTOM | wxLEFT | wxRIGHT, 15);
