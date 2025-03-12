@@ -4,8 +4,9 @@ wxString file;
 wxString date;
 
 bool wxAnnotatorApp::OnInit() {
-	if (!wxApp::OnInit())
+	if (!wxApp::OnInit()) {
 		return false;
+	}
 	std::cerr << "Starting annotator..." << std::endl;
 	
 	wxInitAllImageHandlers();
