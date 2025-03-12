@@ -27,7 +27,6 @@ void chooseJSON() {
 	int iTrnSz = jsTrnData["images"].size();
 	int iValSz = jsValData["images"].size();
 	int iImgSz = iTrnSz + iValSz;
-	std::cerr << iImgSz << std::endl;
 	iImgID = iImgSz+1;
 	double dTrnPrct = 0;
 	double dValPrct = 0;
