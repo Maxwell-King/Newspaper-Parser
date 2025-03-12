@@ -21,7 +21,7 @@ void watch_dir(void) {
 		&wchBuf, 0, NULL)) == NULL) {
 		ErrorExit();
 	}
-	WaitForSingleObject(syncThread, INFINITE); //why can be 0?
+	WaitForSingleObject(syncThread, INFINITE);
 
 	if (dwCompletionStatus == ERROR_SUCCESS) {
 		char chFullPath[MAX_PATH + FILENAME_MAX] = {};
