@@ -33,6 +33,11 @@ void wxImagePanel::paintEvent(wxPaintEvent &evt) { // called on Refresh();
 	render(dc);
 }
 
+void wxImagePanel::paintNow() { 
+	wxClientDC dc(this);
+	render(dc);
+}
+
 void wxImagePanel::mouseDownEvent(wxMouseEvent &evt) {
 	wxhghPoint = evt.GetPosition(); // assuming topleft -> bottomright
 	b_mouseleftdown = true;
@@ -42,8 +47,9 @@ void wxImagePanel::mouseDragEvent(wxMouseEvent &evt) {
 	if (b_mouseleftdown) {
 		wxcurPoint = evt.GetPosition();
 		b_dragging = true;
-		wxClientDC dc(this);
-		render(dc);
+		paintNow();
+		// wxClientDC dc(this);
+		// render(dc);
 	}
 } 
 
@@ -72,16 +78,17 @@ void wxImagePanel::mouseUpEvent(wxMouseEvent &evt) {
 	}
 	b_mouseleftdown = false;
 	b_dragging = false;
+	paintNow();
 }
 
 void wxImagePanel::render(wxDC &dc) {
+	dc.DrawBitmap(resized, 0, 0, false);
 	if (b_dragging) { 
 		dc.DrawLine(wxhghPoint.x, wxhghPoint.y, wxcurPoint.x, wxhghPoint.y);
 		dc.DrawLine(wxhghPoint.x, wxhghPoint.y, wxhghPoint.x, wxcurPoint.y);
 		dc.DrawLine(wxcurPoint.x, wxcurPoint.y, wxcurPoint.x, wxhghPoint.y);
 		dc.DrawLine(wxcurPoint.x, wxcurPoint.y, wxhghPoint.x, wxcurPoint.y);
 	}
-	dc.DrawBitmap(resized, 0, 0, false);
 }
 
 

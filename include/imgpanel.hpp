@@ -25,6 +25,8 @@ public:
 	bool b_mouseleftdown = false;
 
 	void paintEvent(wxPaintEvent &evt);
+	void paintNow();
+
 
 	void mouseDownEvent(wxMouseEvent &evt);
 	void mouseDragEvent(wxMouseEvent &evt);
