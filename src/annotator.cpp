@@ -1,5 +1,8 @@
 #include "../include/annotator.hpp"
 
+wxString file;
+wxString date;
+
 bool wxAnnotatorApp::OnInit() {
 	if (!wxApp::OnInit())
 		return false;
@@ -8,14 +11,16 @@ bool wxAnnotatorApp::OnInit() {
 	wxInitAllImageHandlers();
 	frame = new wxFrame(NULL, wxID_ANY, wxT("Annotator"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX));
 	chooseJSON();
-	drawPanel = new wxImagePanel(frame, file, date);
+	drawPanel = new wxImagePanel(frame);
 	frame->Show();
 	
 	return true;
 }
 
 int wxAnnotatorApp::OnExit() {
-	closeJSON();
+	if (!jsFilename.empty()) {
+		closeJSON();
+	}
 	return 0;
 }
 

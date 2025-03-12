@@ -12,14 +12,14 @@
 
 class wxImagePanel : public wxPanel {
 public:
-	wxImagePanel(wxFrame *parent, wxString file, wxString date);
+	wxImagePanel(wxFrame *parent);
 	wxImage image;
 	wxPoint wxhghPoint;
 	wxPoint wxlowPoint;
 	wxPoint wxcurPoint;
 	Pix *pixImg;
 	wxBitmap resized;
-	int w_bmp, h_bmp, w_img, h_img;
+	int w_bmp, h_bmp;
 
 	bool b_dragging = false;
 	bool b_mouseleftdown = false;

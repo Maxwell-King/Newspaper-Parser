@@ -13,8 +13,17 @@ wxDlgChoice::wxDlgChoice(wxPanel *parent, wxString text, int xbb_img, int ybb_im
 					wxTheClipboard->Close();
 				}
 				if (DlgChoice->GetSelection() != wxNOT_FOUND ) {
+					if (iBboxes == 0) {
+						jsData["images"] += nlohmann::json::object({
+							{"id", iImgID},
+							{"width", w_img},
+							{"height", h_img},
+							{"file_name", file},
+							{"date_captured", date}
+						});
+					}
 					jsData["annotations"] += nlohmann::json::object({
-						{"id", 50*iImgID + iBboxes}, // id must be unique 
+						{"id", 50*iImgID + iBboxes}, // id must be unique (atleast among other annotations
 						{"iscrowd", 0},
 						{"category_id", DlgChoice->GetSelection()},
 						{"image_id", iImgID},
@@ -22,6 +31,7 @@ wxDlgChoice::wxDlgChoice(wxPanel *parent, wxString text, int xbb_img, int ybb_im
 						{"bbox", nlohmann::json::array({xbb_img, ybb_img, wbb_img, hbb_img})}
 					});
 					iBboxes++;
+
 				}
 			});
 	DlgButtonSizer->Add(DlgChoice, 0, wxALIGN_BOTTOM | wxBOTTOM | wxLEFT | wxRIGHT, 15);

@@ -1,4 +1,6 @@
 #include "../include/imgpanel.hpp"
+int w_img;
+int h_img;
 
 std::string OCRregion(Pix *pixRegion, int x, int y, int w, int h) {
 	tesseract::TessBaseAPI *tessApi = new tesseract::TessBaseAPI();
@@ -11,7 +13,7 @@ std::string OCRregion(Pix *pixRegion, int x, int y, int w, int h) {
 	return outText;
 }
 
-wxImagePanel::wxImagePanel(wxFrame *parent, wxString file, wxString date) : wxPanel(parent) {
+wxImagePanel::wxImagePanel(wxFrame *parent) : wxPanel(parent) {
 	Bind(wxEVT_PAINT, &wxImagePanel::paintEvent, this);
 	Bind(wxEVT_LEFT_DOWN, &wxImagePanel::mouseDownEvent, this);
 	Bind(wxEVT_MOTION, &wxImagePanel::mouseDragEvent, this);
@@ -20,13 +22,6 @@ wxImagePanel::wxImagePanel(wxFrame *parent, wxString file, wxString date) : wxPa
 	pixImg = pixRead(file.c_str());
 	w_img = image.GetSize().x;
 	h_img = image.GetSize().y;
-	jsData["images"] += nlohmann::json::object({
-						{"id", iImgID},
-						{"width", w_img},
-						{"height", h_img},
-						{"file_name", file},
-						{"date_captured", date}
-		});
 	parent->SetSize(ScaleToScreen(image.GetSize()));
 	w_bmp = parent->GetClientSize().x;
 	h_bmp = parent->GetClientSize().y;
