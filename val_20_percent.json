@@ -1,1 +1,1 @@
-{"annotations":[{"area":226395,"bbox":[6,289,645,351],"category_id":999,"id":50,"image_id":1,"iscrowd":0}],"categories":[{"id":0,"name":"headline"},{"id":999,"name":"contents"}],"images":[{"date_captured":"2025-03-04 22:18:44","file_name":"C:/Users/danie/Pictures/test/img3.jpg","height":1857,"id":1,"width":2660}]}
+{"annotations":[],"categories":[{"id":0,"name":"headline"},{"id":999,"name":"contents"}],"images":[]}
