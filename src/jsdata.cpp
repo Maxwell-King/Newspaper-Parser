@@ -185,19 +185,16 @@ void parse(struct json *js_rd, std::string file) {
   match(':');
   match('[');
   match_annotation(js_rd);
-	std::cerr << js_rd->annotations << std::endl;;
   match(',');
   match_string("categories"); 
   match(':');
   match('[');
   match_categories(js_rd);
-	std::cerr << js_rd->categories << std::endl;;
   match(',');
   match_string("images");
   match(':');
   match('[');
   match_images(js_rd);
-	std::cerr << js_rd->images << std::endl;;
   match('}');
 	js_in.close();
 }
@@ -209,8 +206,12 @@ void add_image(std::string date_captured, std::string file_name, int h_img, int 
     ",\"id\":" + std::to_string(id) +
     ",\"width\":" + std::to_string(w_img) +
     "}";
-  js_data.images += ',';
+  if (js_data.images_size != 0) {
+		js_data.images += ',';
+	}
   js_data.images.append(image_obj);
+	js_data.images_size++;
+
 }
 
 void add_annotation(int area, int bbox_x, int bbox_y, int bbox_w, int bbox_h, int cat_id, int id, int img_id) { // {"area":396459,"bbox":[15,50,1953,203],"category_id":0,"id":3000,"image_id":0,"iscrowd":0}
@@ -220,8 +221,12 @@ void add_annotation(int area, int bbox_x, int bbox_y, int bbox_w, int bbox_h, in
     ",\"id\":" + std::to_string(id) +
     ",\"image_id\":" + std::to_string(img_id) +
     ",\"iscrowd\":0}";
-  js_data.annotations += ',';
+	if (js_data.annotations_size != 0) {
+		js_data.annotations += ',';
+	}
   js_data.annotations.append(annotation_obj);
+						js_data.annotations_size++;
+
 }
 
 
