@@ -1,1 +1,1 @@
-{"annotations":[],"categories":[{"id":0,"name":"headline"},{"id":1,"name":"contents"}],"images":[]}
+{"annotations":[{"area":396459,"bbox":[15,50,1953,203],"category_id":0,"id":3000,"image_id":0,"iscrowd":0}],"categories":[{"id":0,"name":"headline"}],"images":[{"date_captured":"2025-02-10 01:08:22","file_name":"img1.jpg","height":1251,"id":0,"width":3316}]}

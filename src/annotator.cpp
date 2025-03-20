@@ -19,9 +19,7 @@ bool wxAnnotatorApp::OnInit() {
 }
 
 int wxAnnotatorApp::OnExit() {
-	if (!jsFilename.empty()) {
-		closeJSON();
-	}
+	closeJSON();
 	return 0;
 }
 

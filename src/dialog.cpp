@@ -1,9 +1,11 @@
 #include "../include/dialog.hpp"
 
+int iBboxes = 0;
+
 wxDlgChoice::wxDlgChoice(wxPanel *parent, wxString text, int xbb_img, int ybb_img, int wbb_img, int hbb_img) : wxDialog(parent, wxID_ANY, wxEmptyString) {
 	wxBoxSizer *bMainSizer = new wxBoxSizer(wxVERTICAL);
   bMainSizer->Add(new wxStaticText(this, wxID_ANY, text), 0, wxALIGN_CENTER | wxALL, 5);
-	wxChoice *DlgChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, iNumCats, wxCatNames.data()); // add annotation 
+	wxChoice *DlgChoice = new wxChoice(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, js_data.categories_size, js_data.categories_list.data()); // add annotation 
 	wxButton *DlgCopy = new wxButton(this, wxID_ANY, "Copy");
 	DlgCopy->Bind(wxEVT_BUTTON,
 		[=](wxCommandEvent&) {
@@ -12,27 +14,15 @@ wxDlgChoice::wxDlgChoice(wxPanel *parent, wxString text, int xbb_img, int ybb_im
 				wxTheClipboard->Close();
 			}
 			if (DlgChoice->GetSelection() != wxNOT_FOUND ) {
+				std::cerr << iBboxes << std::endl;
 				if (iBboxes == 0) {
-					jsData["images"] += nlohmann::json::object({
-						{"id", iImgID},
-						{"width", w_img},
-						{"height", h_img},
-						{"file_name", file},
-						{"date_captured", date}
-					});
+					add_image(date, file, h_img, img_id, w_img);
 				}
-				jsData["annotations"] += nlohmann::json::object({
-					{"id", 50*iImgID + iBboxes}, // id must be unique (atleast among other annotations
-					{"iscrowd", 0},
-					{"category_id", DlgChoice->GetSelection()},
-					{"image_id", iImgID},
-					{"area", wbb_img * hbb_img},
-					{"bbox", nlohmann::json::array({xbb_img, ybb_img, wbb_img, hbb_img})}
-				});
-				iBboxes++;
+					add_annotation(wbb_img * hbb_img, xbb_img, ybb_img, wbb_img, hbb_img, DlgChoice->GetSelection(), 50*img_id + js_data.annotations_size, img_id);
+					js_data.annotations_size++;
+					iBboxes++;
 			}
 		});
-
   wxBoxSizer *bButtonSizer = new wxBoxSizer(wxHORIZONTAL);
   bButtonSizer->Add(DlgChoice, 1, wxBOTTOM | wxLEFT, 5); 
 	bButtonSizer->AddStretchSpacer();
