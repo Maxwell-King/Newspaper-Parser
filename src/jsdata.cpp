@@ -9,8 +9,8 @@ void match(char t) {
     js_in.get();
   }
   else {
-    std::cerr << "Expected " << t << " found " << std::to_string(js_in.peek()-'0') <<  " at " << js_in.tellg() << std::endl;
-    exit(-1); // fail
+    std::cerr << "Expected " << t << " found " << (char)(js_in.peek()) <<  " at " << js_in.tellg() << std::endl;
+    exit(-1);
   }
 }
 
@@ -35,7 +35,7 @@ std::string get_string() {
 std::string match_number() {
 	std::string num;
   while (std::isdigit(js_in.peek())) { // no negative numbers
-		num += std::to_string(js_in.get()-'0');
+		num += js_in.get();
   }
 	return num;
 }
@@ -47,7 +47,6 @@ void match_annotation(struct json *js_rd) {
       break;
     }
     match('{');
-
     match_string("area");
     match(':');
     js_rd->annotations.append("{\"area\":" + match_number());
@@ -81,7 +80,6 @@ void match_annotation(struct json *js_rd) {
     js_rd->annotations.append(",\"iscrowd\":" + match_number());
     match('}');
 		js_rd->annotations += '}';
-	
     js_rd->annotations_size++;
     if (js_in.peek() == ',') {
       match(',');
@@ -100,7 +98,6 @@ std::string match_date() {
   match('-');
   str_date.append('-' + match_number());
   match(' ');
-
   str_date.append(' ' + match_number());
   match(':');
   str_date.append(':' + match_number());
@@ -117,7 +114,6 @@ void match_images(struct json *js_rd) {
       break;
     }
     match('{');
-
     match_string("date_captured");
     match(':');
     js_rd->images.append("{\"date_captured\":\"" + match_date() + "\"");
@@ -125,7 +121,6 @@ void match_images(struct json *js_rd) {
     match_string("file_name");
     match(':');
 		js_rd->images.append(",\"file_name\":\"" + get_string() + "\"");
-
     match(',');
     match_string("height");
     match(':');
@@ -138,10 +133,8 @@ void match_images(struct json *js_rd) {
     match_string("width");
     match(':');
     js_rd->images.append(",\"width\":" + match_number());
-    
     match('}');
 		js_rd->images += '}';
-
     js_rd->images_size++;
     if (js_in.peek() == ',') {
       match(',');
@@ -155,13 +148,15 @@ void match_categories(struct json *js_rd) { // must have atleast one category (p
     match('{');
     match_string("id");
     match(':');
-    js_rd->categories.append("{\"id\":" + match_number());
+		int cat_id = std::stoi(match_number());
+    js_rd->categories.append("{\"id\":" + std::to_string(cat_id));
     match(',');
     match_string("name");
     match(':');
 		std::string cat_name = get_string();
-		js_rd->categories.append(",\"name\":\"" + cat_name + '\"');
+		js_rd->categories.append(",\"name\":\"" + cat_name + "\"");
     js_rd->categories_list.push_back(cat_name);
+		js_rd->cat_map[cat_name] = cat_id;
     match('}');
 		js_rd->categories += '}';
     js_rd->categories_size++;
@@ -184,17 +179,17 @@ void parse(struct json *js_rd, std::string file) {
   match_string("annotations");
   match(':');
   match('[');
-  match_annotation(js_rd);
+  match_annotation(js_rd); // {"area":396459,"bbox":[15,50,1953,203],"category_id":0,"id":3000,"image_id":0,"iscrowd":0}
   match(',');
   match_string("categories"); 
   match(':');
   match('[');
-  match_categories(js_rd);
+  match_categories(js_rd); // {"id":0,"name":"headline"},{"id":1,"name":"contents"}
   match(',');
   match_string("images");
   match(':');
   match('[');
-  match_images(js_rd);
+  match_images(js_rd); // {"date_captured":"2025-03-04 22:18:44","file_name":"C:/Users/danie/Pictures/test/img3.jpg","height":1857,"id":8,"width":2660}
   match('}');
 	js_in.close();
 }
@@ -211,10 +206,9 @@ void add_image(std::string date_captured, std::string file_name, int h_img, int 
 	}
   js_data.images.append(image_obj);
 	js_data.images_size++;
-
 }
 
-void add_annotation(int area, int bbox_x, int bbox_y, int bbox_w, int bbox_h, int cat_id, int id, int img_id) { // {"area":396459,"bbox":[15,50,1953,203],"category_id":0,"id":3000,"image_id":0,"iscrowd":0}
+void add_annotation(int area, int bbox_x, int bbox_y, int bbox_w, int bbox_h, int cat_id, int id, int img_id) {
   std::string annotation_obj = "{\"area\":" + std::to_string(area) +
     ",\"bbox\":[" + std::to_string(bbox_x) + "," + std::to_string(bbox_y) + "," + std::to_string(bbox_w) + "," + std::to_string(bbox_h) + "]"
     ",\"category_id\":" + std::to_string(cat_id) +
@@ -225,13 +219,12 @@ void add_annotation(int area, int bbox_x, int bbox_y, int bbox_w, int bbox_h, in
 		js_data.annotations += ',';
 	}
   js_data.annotations.append(annotation_obj);
-						js_data.annotations_size++;
-
+	js_data.annotations_size++;
 }
 
 
 void json_copy(struct json *dest, const struct json src) {
-	dest->images_size = src.images_size; // commas in array + 1
+	dest->images_size = src.images_size;
 	dest->categories_size = src.categories_size;
 	dest->annotations_size = src.annotations_size;
 
@@ -241,15 +234,16 @@ void json_copy(struct json *dest, const struct json src) {
 	dest->js_filename = src.js_filename;
 
 	dest->categories_list = src.categories_list;	
+	dest->cat_map = src.cat_map;	
 }
 
-void closeJSON() {
+void js_close() {
 	std::ofstream js_out(js_data.js_filename, std::fstream::trunc);
 	js_out << "{\"annotations\":[" << js_data.annotations << "],\"categories\":[" << js_data.categories << "],\"images\":[" << js_data.images << "]}";
   js_out.close();
 }
 
-void chooseJSON() {
+void js_choose() {
 	struct json js_val;
 	struct json js_train;
 	parse(&js_train, "train_80_percent.json");

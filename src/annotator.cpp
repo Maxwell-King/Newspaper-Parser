@@ -11,7 +11,7 @@ bool wxAnnotatorApp::OnInit() {
 	
 	wxInitAllImageHandlers();
 	frame = new wxFrame(NULL, wxID_ANY, wxT("Annotator"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE & ~(wxRESIZE_BORDER | wxMAXIMIZE_BOX));
-	chooseJSON();
+	js_choose();
 	drawPanel = new wxImagePanel(frame);
 	frame->Show();
 	
@@ -19,7 +19,7 @@ bool wxAnnotatorApp::OnInit() {
 }
 
 int wxAnnotatorApp::OnExit() {
-	closeJSON();
+	js_close();
 	return 0;
 }
 

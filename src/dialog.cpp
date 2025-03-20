@@ -14,13 +14,10 @@ wxDlgChoice::wxDlgChoice(wxPanel *parent, wxString text, int xbb_img, int ybb_im
 				wxTheClipboard->Close();
 			}
 			if (DlgChoice->GetSelection() != wxNOT_FOUND ) {
-				std::cerr << iBboxes << std::endl;
 				if (iBboxes == 0) {
 					add_image(date, file, h_img, img_id, w_img);
-					js_data.images_size++;
 				}
-					add_annotation(wbb_img * hbb_img, xbb_img, ybb_img, wbb_img, hbb_img, DlgChoice->GetSelection(), 50*img_id + js_data.annotations_size, img_id);
-					js_data.annotations_size++;
+					add_annotation(wbb_img * hbb_img, xbb_img, ybb_img, wbb_img, hbb_img, js_data.cat_map[DlgChoice->GetString(DlgChoice->GetSelection())], 50*img_id + iBboxes, img_id);
 					iBboxes++;
 			}
 		});
