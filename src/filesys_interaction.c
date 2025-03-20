@@ -17,8 +17,8 @@ void watch_dir(void) {
 	char chDate[20];
 	WCHAR wchBuf[100] = {};
 	if ((syncThread = CreateThread(NULL, 0,
-		(LPTHREAD_START_ROUTINE)wait,
-		&wchBuf, 0, NULL)) == NULL) {
+			(LPTHREAD_START_ROUTINE)wait,
+			&wchBuf, 0, NULL)) == NULL) {
 		ErrorExit();
 	}
 	WaitForSingleObject(syncThread, INFINITE);
@@ -44,11 +44,11 @@ static void wait(WCHAR *wchBuf) {
 		if (ReadDirectoryChangesW(hDir, wchBuf, 100, FALSE, 
 				FILE_NOTIFY_CHANGE_FILE_NAME,
 				&dwBytesRet, NULL, NULL) == 0) {
-					dwCompletionStatus = GetLastError();
+			dwCompletionStatus = GetLastError();
 			if (dwCompletionStatus != ERROR_OPERATION_ABORTED &&
-				dwCompletionStatus != ERROR_IO_PENDING) {
-					fprintf(stderr, "dwCompletionStatus != ERROR_OPERATION_ABORTED && dwCompletionStatus != ERROR_IO_PENDING)");
-					ErrorExit();
+					dwCompletionStatus != ERROR_IO_PENDING) {
+				fprintf(stderr, "dwCompletionStatus != ERROR_OPERATION_ABORTED && dwCompletionStatus != ERROR_IO_PENDING)");
+				ErrorExit();
 			}
 			break;
 		}
@@ -71,13 +71,13 @@ static void call_cp(char chFullPath[MAX_PATH + FILENAME_MAX], char *date_cap) {
 	fprintf(stderr, "cmd_line: %s\n", cmd_line);
 	
 	if(!CreateProcess( NULL, //"./annotator.exe"
-		cmd_line,
-		NULL, NULL,
-		FALSE, 0,
-		NULL, NULL,
-		&start_info,
-		&proc_info ) ) {
-			ErrorExit();
+			cmd_line,
+			NULL, NULL,
+			FALSE, 0,
+			NULL, NULL,
+			&start_info,
+			&proc_info ) ) {
+		ErrorExit();
 	}
 	WaitForSingleObject( proc_info.hProcess, INFINITE );
 	// Close process and thread handles. 
@@ -87,8 +87,8 @@ static void call_cp(char chFullPath[MAX_PATH + FILENAME_MAX], char *date_cap) {
 
 static void get_date( char chFullPath[MAX_PATH], char chDate[20] ) {
 	HANDLE hFile = CreateFileA(chFullPath, GENERIC_READ,
-															FILE_SHARE_READ, NULL, OPEN_EXISTING,
-															FILE_ATTRIBUTE_NORMAL, NULL);
+		FILE_SHARE_READ, NULL, OPEN_EXISTING,
+		FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
 		ErrorExit(); //Cannot open files downloaded off internet (security). Unblock first.
 	};
