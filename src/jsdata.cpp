@@ -84,7 +84,6 @@ void match_annotation(struct json *js_rd) {
 		if (js_in.peek() == ',') {
 			match(',');
 			js_rd->annotations += ',';
-
 		}
 	}
 }
